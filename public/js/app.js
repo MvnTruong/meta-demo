@@ -37343,7 +37343,56 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
+function displayQueryCard(display) {
+  document.getElementById('search-results').style.display = display ? "flex" : "none";
+}
+
+function clearDisplayQueryCard() {
+  var searchResultsBody = document.getElementById('search-results');
+
+  while (searchResultsBody.lastElementChild) {
+    searchResultsBody.removeChild(searchResultsBody.lastElementChild);
+  }
+}
+
+var buttons = document.getElementsByClassName('api-query');
+var searchResultBody = $('#search-results-body');
+
+var _iterator = _createForOfIteratorHelper(buttons),
+    _step;
+
+try {
+  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+    var button = _step.value;
+    button.addEventListener('click', function (event) {
+      console.log('query:', event.target.dataset.searchQuery);
+      window.axios.get("http://www.omdbapi.com/?s=".concat(event.target.dataset.searchQuery, "&apikey=720c3666")).then(function (response) {
+        return response.data;
+      }).then(function (data) {
+        displayQueryCard(true);
+        searchResultBody.empty();
+        data['Search'].forEach(function (movie) {
+          var image = movie['Poster'] !== "N/A" ? "<img class=\"card-img-top\" src=\"".concat(movie['Poster'], "\" alt=\"Post image\">") : '';
+          searchResultBody.append("\n                        <div class=\"card m-2\" style=\"width: 18rem;\">\n                        ".concat(image, "\n                        <div class=\"card-body\">\n                            <h5 class=\"card-title\">").concat(movie['Title'], "</h5>\n                            <p class=\"card-text\">").concat(movie['Year'], "</p>\n                            <p class=\"card-text\">").concat(movie['Type'], "</p>\n                            <a href=\"https://imdb.com/title/").concat(movie['imdbID'], "\" class=\"btn btn-primary\" target=\"_blank\">IMDB</a>\n                        </div>\n                        </div>\n                    "));
+        });
+      });
+    });
+  }
+} catch (err) {
+  _iterator.e(err);
+} finally {
+  _iterator.f();
+}
+
+displayQueryCard(false);
 
 /***/ }),
 
@@ -37355,11 +37404,6 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 /***/ (function(module, exports, __webpack_require__) {
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/**
- * We'll load jQuery and the Bootstrap jQuery plugin which provides support
- * for JavaScript based Bootstrap features such as modals and tabs. This
- * code may be modified to fit the specific needs of your application.
- */
 
 try {
   window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")["default"];
@@ -37367,15 +37411,8 @@ try {
 
   __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
 } catch (e) {}
-/**
- * We'll load the axios HTTP library which allows us to easily issue requests
- * to our Laravel back-end. This library automatically handles sending the
- * CSRF token as a header based on the value of the "XSRF" token cookie.
- */
-
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
