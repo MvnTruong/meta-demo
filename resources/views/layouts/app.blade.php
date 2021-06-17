@@ -32,7 +32,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ url('/movies') }}">Movies</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ url('/posters') }}">Posters</a>
+                        </li>
                     </ul>
                 </div>
             </div>

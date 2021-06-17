@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-center" id="search-results">
+    <div class="row justify-content-center" id="search-results" style="display: none">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">Search Results</div>

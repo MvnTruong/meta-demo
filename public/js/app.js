@@ -37374,14 +37374,24 @@ try {
     var button = _step.value;
     button.addEventListener('click', function (event) {
       console.log('query:', event.target.dataset.searchQuery);
-      window.axios.get("http://www.omdbapi.com/?s=".concat(event.target.dataset.searchQuery, "&apikey=720c3666")).then(function (response) {
+      axios.get("http://www.omdbapi.com/?s=".concat(event.target.dataset.searchQuery, "&apikey=720c3666")).then(function (response) {
         return response.data;
       }).then(function (data) {
         displayQueryCard(true);
         searchResultBody.empty();
         data['Search'].forEach(function (movie) {
-          var image = movie['Poster'] !== "N/A" ? "<img class=\"card-img-top\" src=\"".concat(movie['Poster'], "\" alt=\"Post image\">") : '';
-          searchResultBody.append("\n                        <div class=\"card m-2\" style=\"width: 18rem;\">\n                        ".concat(image, "\n                        <div class=\"card-body\">\n                            <h5 class=\"card-title\">").concat(movie['Title'], "</h5>\n                            <p class=\"card-text\">").concat(movie['Year'], "</p>\n                            <p class=\"card-text\">").concat(movie['Type'], "</p>\n                            <a href=\"https://imdb.com/title/").concat(movie['imdbID'], "\" class=\"btn btn-primary\" target=\"_blank\">IMDB</a>\n                        </div>\n                        </div>\n                    "));
+          var image = movie['Poster'] !== "N/A" ? "<img class=\"card-img-top\" src=\"".concat(movie['Poster'], "\" alt=\"Poster image\">") : '';
+          searchResultBody.append("\n                        <div class=\"card m-2\" style=\"width: 18rem;\">\n                        ".concat(image, "\n                        <div class=\"card-body\">\n                            <h5 class=\"card-title\">").concat(movie['Title'], "</h5>\n                            <p class=\"card-text\">").concat(movie['Year'], "</p>\n                            <p class=\"card-text\">").concat(movie['Type'], "</p>\n                            <a href=\"https://imdb.com/title/").concat(movie['imdbID'], "\" class=\"btn btn-primary\" target=\"_blank\">IMDB</a>\n                        </div>\n                        </div>\n                    ")); // store to database
+
+          axios.post('/movies', {
+            title: movie['Title'],
+            year: movie['Year'],
+            imdb: movie['imdbID'],
+            type: movie['Type'],
+            poster: movie['Poster']
+          })["catch"](function () {
+            return console.log('Whoa. Déjà vu.');
+          });
         });
       });
     });
@@ -37391,8 +37401,6 @@ try {
 } finally {
   _iterator.f();
 }
-
-displayQueryCard(false);
 
 /***/ }),
 

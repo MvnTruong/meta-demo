@@ -18,14 +18,14 @@ for(const button of buttons) {
     button.addEventListener('click', event => {
         console.log('query:', event.target.dataset.searchQuery)
 
-        window.axios.get(`http://www.omdbapi.com/?s=${event.target.dataset.searchQuery}&apikey=720c3666`)
+        axios.get(`http://www.omdbapi.com/?s=${event.target.dataset.searchQuery}&apikey=720c3666`)
             .then(response => response.data)
             .then(data => {
                 displayQueryCard(true)
 
                 searchResultBody.empty();
                 data['Search'].forEach(movie => {
-                    const image = movie['Poster'] !== "N/A" ? `<img class="card-img-top" src="${movie['Poster']}" alt="Post image">` : ''
+                    const image = movie['Poster'] !== "N/A" ? `<img class="card-img-top" src="${movie['Poster']}" alt="Poster image">` : ''
                     searchResultBody.append(`
                         <div class="card m-2" style="width: 18rem;">
                         ${image}
@@ -37,12 +37,20 @@ for(const button of buttons) {
                         </div>
                         </div>
                     `)
+
+                    // store to database
+
+                    axios.post('/movies', {
+                        title: movie['Title'],
+                        year: movie['Year'],
+                        imdb: movie['imdbID'],
+                        type: movie['Type'],
+                        poster: movie['Poster'],
+                    }).catch(() => console.log('Whoa. Déjà vu.'));
                 })
             })
     })
 }
-
-displayQueryCard(false);
 
 
 
